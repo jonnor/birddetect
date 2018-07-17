@@ -1,0 +1,6 @@
+data/
+detectbirds
+build/
+tmp/
+__pycache__
+.pytest_cache
