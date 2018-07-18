@@ -3,6 +3,9 @@
  * 
  * Copyright (c) 2017 Project Nayuki. (MIT License)
  * https://www.nayuki.io/page/free-small-fft-in-multiple-languages
+ *
+ * Copyright (c) 2018 Jon Nordby. (MIT License)
+ * Modifications to run without malloc, on single-precision float
  * 
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -21,11 +24,17 @@
  *   Software.
  */
 
+#ifndef EMFFT_H
+#define EMFFT_H
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+
 #include <math.h>
 #include <stddef.h>
 #include <stdint.h>
-#include <stdlib.h>
-#include <string.h>
 
 #ifndef M_PI
 #define M_PI 3.14159265358979323846
@@ -106,7 +115,7 @@ bool fft_table_transform(FFTTable table, double real[], double imag[], size_t n)
 }
 
 // Without precomputed table
-bool fft_transform(float real[], float imag[], size_t n) {
+bool emfft_transform(float real[], float imag[], size_t n) {
 	// Length variables
 	int levels = 0;  // Compute levels = floor(log2(n))
 	for (size_t temp = n; temp > 1U; temp >>= 1)
@@ -150,4 +159,7 @@ bool fft_transform(float real[], float imag[], size_t n) {
 	return true;
 }
 
-
+#ifdef __cplusplus
+} // extern "C"
+#endif
+#endif // EMVECTOR_H
