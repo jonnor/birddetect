@@ -20,7 +20,6 @@ Should be able to run as online classification in real-time.
 Improve model generalization on compete set
 
 * Increase birdvox dataset to 5k sampled
-* Look at PCAed features, per-class histograms
 * Try to add a highpass filter to reduce noise
 * Try to add a lowpass filter to reduce noise
 * Try to add more features. mean,std,min ?
@@ -28,7 +27,6 @@ Improve model generalization on compete set
 * Cluster the datasets, look at (dis)similarities of compete vs train
 * Would it make sense to normalize the summarized features?
 In addition to or instead of the spectrogram?
-* Setup 3-way cross-validation
 * Make tools for getting misclassified results, visualize/playback
 * Visualize feature importance on top of feature mean/meadian/std
 * Try some data augmentation to make robust against variations
@@ -41,9 +39,10 @@ In addition to or instead of the spectrogram?
 Cleanup
 
 * Move exploratory parts to dedicated notebook
+* Put datasets up on QuiltData
 * Explain basics of challenge, generalization
 * Explain classifier approach in notebook
-* Make precomputed features available
+* Make precomputed features available on QuiltData
 
 Run on hardware
 
