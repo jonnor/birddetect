@@ -10,7 +10,7 @@ def main():
     files = os.listdir(path)    
 
     df = pandas.DataFrame({
-        'itemid': files,
+        'itemid': [ f.replace('.wav', '') for f in files ],
         'datasetid': [dataset for f in files],
         'hasbird': [None for f in files],
     })
