@@ -19,11 +19,16 @@ Should be able to run as online classification in real-time.
 
 Improve model generalization on compete set
 
-* Increase birdvox dataset to 5k sampled
+* Use full birdvox dataset
+* Move minmax scaling on frame, do it on summarized instead
+* Add min,mean,std summarization
+* Add some basic features on frames. RMS, zero-crossings, spectral centroid, spectral flatness
+* Add features on summarized spectrogram. mean,median,mode,skewness,kurtosis
+* Try a pre-emphasis filter
+* Maybe go back to MFCCs
 * Try to add a highpass filter to reduce noise
 * Try to add a lowpass filter to reduce noise
-* Try to add more features. mean,std,min ?
-* Try longer frame size, or median filtering the spectrogram
+* Try longer frame size
 * Cluster the datasets, look at (dis)similarities of compete vs train
 * Would it make sense to normalize the summarized features?
 In addition to or instead of the spectrogram?
@@ -32,8 +37,7 @@ In addition to or instead of the spectrogram?
 * Try some data augmentation to make robust against variations
 * Try an SNR estimator as feature
 * Try denoising
-* Augment data by adding noise
-* Try a pre-emphasis filter?
+* Augment labeled data by adding noise
 * Try to log-scale the spectrograms
 
 Cleanup
