@@ -27,12 +27,17 @@ emaudio_bufferer_reset(EmAudioBufferer *self) {
 }
 
 int
-emaudio_bufferer_add(EmAudioBufferer *self, int16_t s) {
+emaudio_bufferer_add(EmAudioBufferer *self, float s) {
 
-    self->write_buffer[self->write_offset++] = (float)s/INT16_MAX; 
+    self->write_buffer[self->write_offset++] = s; 
 
     if (self->write_offset == self->buffer_length) {
-        // FIXME: error if read_buffer has not been cleared
+
+        if (self->read_buffer) {
+            // consumer has not cleared it
+            return -1;
+        }
+
         self->write_offset = 0;
         self->read_buffer = self->write_buffer;
         self->write_buffer = (self->read_buffer == self->buffer1) ? self->buffer2 : self->buffer1;

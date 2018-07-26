@@ -6,7 +6,8 @@
 #include <pybind11/stl.h>
 #include <pybind11/numpy.h>
 
-#include "detectbirds.h"
+#include "../emgoertzel.h" 
+#include "../detectbirds.h"
 
 namespace py = pybind11;
 
@@ -110,8 +111,7 @@ public:
 
         int n_frames = 0;
         for (int i=0; i<length; i++) {
-            const int16_t sample = samples[i] * INT16_MAX;
-            emaudio_bufferer_add(&bufferer, sample);
+            emaudio_bufferer_add(&bufferer, samples[i]);
 
             if (bufferer.read_buffer) {
                 EmVector frame = { bufferer.read_buffer, bufferer.buffer_length };

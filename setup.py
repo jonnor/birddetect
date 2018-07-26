@@ -78,7 +78,7 @@ class BuildExt(build_ext):
 ext_modules = [
     Extension(
         'detectbirds',
-        ['detectbirdsmodule.cpp'],
+        ['bindings/detectbirdsmodule.cpp'],
         include_dirs=[
             # Path to pybind11 headers
             get_pybind_include(),
