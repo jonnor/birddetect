@@ -1,3 +1,31 @@
+struct Config {
+  const String prefix = "";
+  const String role = "birddetect/1";
+
+  const char *wifiSsid = "jonnor24";
+  const char *wifiPassword = "";
+
+  const char *mqttHost = "192.168.0.101";
+  const int mqttPort = 1883;
+
+  const char *mqttUsername = NULL;
+  const char *mqttPassword = NULL;
+} cfg;
+
+#include <WiFi.h>
+#include <WiFiClient.h>
+#include <WiFiClientSecure.h>
+
+#include <PubSubClient.h>
+#include <Msgflo.h>
+
+WiFiClient wifiClient;
+PubSubClient mqttClient;
+msgflo::Engine *engine;
+  String clientId = cfg.role + WiFi.macAddress();
+
+auto participant = msgflo::Participant("birddetect/Processor", cfg.role);
+msgflo::OutPort *outPort = nullptr;
 
 #include "detectbirds.h"
 
@@ -5,6 +33,7 @@
 #define AUDIO_WINDOW_LENGTH 1024
 
 class Processor {
+public:
     BirdDetector detector;
     EmAudioBufferer bufferer;
 
@@ -13,6 +42,8 @@ class Processor {
     float input_data[AUDIO_WINDOW_LENGTH];
     float temp1_data[AUDIO_WINDOW_LENGTH];
     float temp2_data[AUDIO_WINDOW_LENGTH];
+
+    int n_frames;
 
 public:
     Processor(int n_mels, float fmin, float fmax, int n_fft, int samplerate) {
@@ -43,6 +74,7 @@ public:
     }
 
     void reset() {
+        n_frames = 0;
         birddetector_reset(&detector);
         emaudio_bufferer_reset(&bufferer);
     }
@@ -55,6 +87,7 @@ public:
             EmVector frame = { bufferer.read_buffer, bufferer.buffer_length };
             birddetector_push_frame(&detector, frame);
             bufferer.read_buffer = NULL; // done processing
+            n_frames += 1;
         }
         return true;
     }
@@ -65,6 +98,8 @@ public:
 };
 
 Processor processor(64, 500, 15000, 1024, 44100);
+long frames_processing_time = 0;
+
 
 #if 0
 #include <driver/i2s.h>
@@ -135,16 +170,117 @@ void readMicrophone() {
 
 #endif
 
+int parseFloatArray(const char *buf, float *values, size_t values_length) {
+  char *err;
+  const char *p = buf;
+  int i = 0;
+
+  while (*p) {
+    const double val = strtod(p, &err);
+    if (i == values_length) {
+      return -1;
+    }
+    if (p == err) {
+      p++;
+    } else if ((err == NULL) || (*err == 0)) { 
+      values[i++] = val;
+      break;
+    } else {
+      values[i++] = val;
+      p = err + 1;
+    }
+  }
+  return i;
+}
+
+
+
+void setupMsgflo() {
+
+  participant.icon = "toggle-on";
+
+  mqttClient.setServer(cfg.mqttHost, cfg.mqttPort);
+  mqttClient.setClient(wifiClient);
+
+  engine = msgflo::pubsub::createPubSubClientEngine(participant, &mqttClient, clientId.c_str(), cfg.mqttUsername, cfg.mqttPassword);
+
+  outPort = engine->addOutPort("prediction", "any", cfg.prefix+cfg.role+"/prediction");
+
+  msgflo::InPort *framePort = engine->addInPort("frame", "boolean", cfg.prefix+cfg.role+"/frame",
+  [](byte *data, int length) -> void {
+
+    long frame_time = 0;
+    size_t VALUES_MAX = 512;
+    float values[VALUES_MAX];
+    std::string str((char *)data, length);
+    const int n_values = parseFloatArray(str.c_str(), values, VALUES_MAX);
+
+    Serial.print("got values: ");
+    Serial.println(n_values);
+    
+    const long before = micros();
+    for (int i=0; i<n_values; i++){ 
+      processor.add_sample(values[i]);
+    }
+    frames_processing_time += (micros() - before);
+  });
+  
+  msgflo::InPort *predictPort = engine->addInPort("predict", "boolean", cfg.prefix+cfg.role+"/predict",
+  [](byte *data, int length) -> void {
+
+    const long before = micros();
+    const int hasbird = processor.predict() ? 1 : 0;
+    const long predict_time = (micros() - before);
+
+    const size_t OUT_MAX = 1024;
+    char out[OUT_MAX];
+    
+    snprintf(out, OUT_MAX, "%d;%d;%ld;%ld\n",
+      hasbird, processor.n_frames, frames_processing_time, predict_time);
+    outPort->send(out);
+       
+    frames_processing_time = 0;
+  });
+  
+}
+
+
+
 void setup() {
   Serial.begin(115200);
+  delay(100);
+  Serial.println();
+  Serial.println();
+  Serial.println();
+
 //  Serial.println("Configuring microphone...");
 //  setupMicrophone();
 //  Serial.println("I2S driver installed.");
+
+
+  WiFi.mode(WIFI_STA);
+  Serial.printf("Configuring wifi: %s\r\n", cfg.wifiSsid);
+  WiFi.begin(cfg.wifiSsid, cfg.wifiPassword);
+
+  setupMsgflo();
 }
 
 void loop() {
+  static bool connected = false;
 
-
+  if (WiFi.status() == WL_CONNECTED) {
+    if (!connected) {
+      Serial.printf("Wifi connected: ip=%s\r\n", WiFi.localIP().toString().c_str());
+    }
+    connected = true;
+    engine->loop();
+  } else {
+    if (connected) {
+      connected = false;
+      Serial.println("Lost wifi connection.");
+    }
+  }
 }
+
 
 
