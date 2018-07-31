@@ -7,6 +7,11 @@ https://www.xeno-canto.org/
 ## Literature review
 Specific to bird audio detection.
 
+[Automatic acoustic detection of birds through deep learning: the first Bird Audio Detection challenge](https://arxiv.org/abs/1807.05812).
+D.Stowell, 2018. Explaining the generalization challenge, performance on mismatched data.
+State-of-the-art CNN/CRNN methods achieve AUC ROC 88% on mismatched set.
+High perf baseline with RandomForest with OSKmeans feature learning performed 79% on mismatched set.
+
 [Bird Audio Detection: tips on building robust detectors](http://machine-listening.eecs.qmul.ac.uk/2016/11/bird-audio-detection-tips-on-building-robust-detectors/)
 Filtering.
 Noise reduction.
