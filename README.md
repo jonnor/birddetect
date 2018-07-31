@@ -4,9 +4,9 @@ DCASE2018 challenge: [Bird audio detection](http://dcase.community/challenge2018
 
 ## Goals
 
-* Classifier running on low-power ARM Cortex M4F,
+* Classifier running on low-power 32-bit microcontroller,
 with high enough classification rate to be useful as recording trigger.
-Should be able to run as online classification in real-time.
+Should be able to run online classification in real-time.
 * Submit for DCASE18 challenge. July 31. Classification, code, technical paper. 
 
 ## Status
@@ -17,6 +17,19 @@ Should be able to run as online classification in real-time.
 
 ## TODO
 
+Run on hardware
+
+* Include emtrees.RandomForestClassifier with float
+* Use embedded model in train/test in notebook
+* Run performance test on ESP32
+
+DCASE2018 submission
+
+* Setup Latex build
+* Write outline
+* Create diagrams
+* Finish report
+
 Improve model generalization on compete set
 
 * Use full birdvox dataset
@@ -25,7 +38,6 @@ Improve model generalization on compete set
 * Add some basic features on frames. RMS, zero-crossings, spectral centroid, spectral flatness
 * Add features on summarized spectrogram. mean,median,mode,skewness,kurtosis
 * Try a pre-emphasis filter
-* Maybe go back to MFCCs
 * Try to add a highpass filter to reduce noise
 * Try to add a lowpass filter to reduce noise
 * Try longer frame size
@@ -39,22 +51,6 @@ In addition to or instead of the spectrogram?
 * Try denoising
 * Augment labeled data by adding noise
 * Try to log-scale the spectrograms
-
-Cleanup
-
-* Move exploratory parts to dedicated notebook
-* Put datasets up on QuiltData
-* Explain basics of challenge, generalization
-* Explain classifier approach in notebook
-* Make precomputed features available on QuiltData
-
-Run on hardware
-
-* Verify C feature processing
-* Run C code classifier on Py features
-* Setup Nordic NRF52 dev environment
-* Try to run emtrees.RandomForestClassifier on M4F. Precalculated melspec-maxp features
-* Try to run feature calculation on M4F
 
 Later
 
