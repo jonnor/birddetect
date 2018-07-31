@@ -24,6 +24,7 @@ Run on hardware
 * Use embedded model in train/test in notebook
 * Run performance test on ESP32
 * Implement microphone input on ESP32
+* Implement sending of classification,features,audio
 
 DCASE2018 submission
 
