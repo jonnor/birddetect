@@ -20,7 +20,7 @@ relative abundance reporting. AUC ROC 80%+ under mismatched conditions.
 
 Run on hardware
 
-* Include emtrees.RandomForestClassifier with float
+* Include RandomForestClassifier with float
 * Use embedded model in train/test in notebook
 * Run performance test on ESP32
 * Implement microphone input on ESP32
@@ -32,7 +32,7 @@ DCASE2018 submission
 
 Improve performance in non-matched conditions
 
-* Implement OSKmeans feature learning. Ref Stowell LifeCLEF 2014
+* Implement OSKmeans feature learning. Ref Stowell LifeCLEF 2014.
 * Try some data augmentation to make robust against variations and noise
 * Try a pre-emphasis filter
 * Try to add a highpass filter to reduce noise
@@ -61,7 +61,7 @@ C library
 Other interesting approaches
 
 * Try HOG dictionary feature learning
-* Deep learning based, adapter for microcontrollers. CNN/CRNN
+* Deep learning based, adapted for microcontrollers. CNN
 * OpenSMILE feature learning, segment probabilities. Mario
 
 

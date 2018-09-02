@@ -62,7 +62,23 @@ Using spherical k-means, adapted to run in streaming fashion using online Hartig
 Birdsong often contains rapid temporal modulations, and this information should be useful for identifying species-specific characteristics.
 feature learning is that it can be applied not only to single spectral frames, but to short sequences (or “patches”) of a few frames.
 Also tested a two-layer version, second layer downsampled projected data by 8 then applying feature learning again. 
+.. Spherical k-means implementations: [spherecluster](https://github.com/clara-labs/spherecluster), [OSKMeans](https://dfzljdn9uc3pi.cloudfront.net/2014/488/1/oskmeans.py.txt).
+Note: Learns fully-vertical frames. 
+* What if instead one learns smaller patches of say 5x5 (CNN style)?
+Applied multiple times vertically within frame to get new feature vectors.
+Can maybe also apply it multiple times horizontally inside a frame, and then max-pool.
+Can probably analyze such patches without needing streaming or minibatch?
+With 10k 10s clips, 100 random patches per clip, still under 100MB.
+Would there be a benefit to learn features only/primarily from positive samples? Or atleast eliminate those that are very noisy..
+Feature size gets pretty big pretty fast. (n_mels-kern_size)x(n_bases), ex 59x100...
+But maybe n_bases down to 10 could work. bubul used 16 maps, sparrow 32 maps
+Can one use feature-importance from RandomForest to drop not-needed features in dictionary?
 
+
+[Two Convolutional Neural Networks for Bird Detection in Audio Signals](http://www.ofai.at/~jan.schlueter/pubs/2017_eusipco.pdf).
+Describes a global CNN `bubul` (winner DCASE2017, reference DCASE2018)  and a local CNN `sparrow` with nearly equal performance
+of 88.x% AUC ROC. Several other contestants also had  88.x% results.
+Both have 300k tunable parameters. `sparrow` receptive field was 1.5seconds, 103 frames @ 22kHz.
 
 [Unsupervised dictionary extraction of bird vocalisations and new tools on assessing and visualising bird activity](https://www.sciencedirect.com/science/article/pii/S1574954115000102?via%3Dihub). I.Potamitis, March 2015, Ecological Informatics.
 Tool 1) Report if a recording is void or not of any birds' vocalisation activity (binary classification).
