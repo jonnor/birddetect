@@ -71,9 +71,10 @@ Can probably analyze such patches without needing streaming or minibatch?
 With 10k 10s clips, 100 random patches per clip, still under 100MB.
 Would there be a benefit to learn features only/primarily from positive samples? Or atleast eliminate those that are very noisy..
 Feature size gets pretty big pretty fast. (n_mels-kern_size)x(n_bases), ex 59x100...
-But maybe n_bases down to 10 could work. bubul used 16 maps, sparrow 32 maps
+But maybe n_bases down to 10 could work. bubul used 16 maps,1 sparrow 32 maps
 Can one use feature-importance from RandomForest to drop not-needed features in dictionary?
-
+Depending on what we find, could be that one should run k-means only on some subset of frequency bins. Or split feature learning into multiple independent areas.
+Ref Learning Feature Representations with k-means, Coates/Ng.
 
 [Two Convolutional Neural Networks for Bird Detection in Audio Signals](http://www.ofai.at/~jan.schlueter/pubs/2017_eusipco.pdf).
 Describes a global CNN `bubul` (winner DCASE2017, reference DCASE2018)  and a local CNN `sparrow` with nearly equal performance
