@@ -45,36 +45,9 @@ def extract_melspec_max(path):
 
 f = extract_melspec_max('https://storage.googleapis.com/dcase2018-bad/birdvox/wav/00053d90-e4b9-4045-a2f1-f39efc90cfa9.wav')
 f.shape
-# create Dask array over all the sound files
-def get_dataset(location='https://storage.googleapis.com/dcase2018-bad',
-                feature_extractor=None, feature_shape=None):
 
-    if feature_extractor is None:
-        feature_extractor = extract_melspec_max
-        feature_shape = (64,)
-
-    def get_filelist(dataset_name):
-        u = '/'.join((location, dataset_name, 'files.csv'))
-        #f = urllib.request.urlopen(u)
-        df = pandas.read_csv(u, dtype={'itemid': str})
-        assert df.itemid.dtype == 'object', df.itemid.dtype
-        return df.itemid.values, df.hasbird.values
-    def wav_path(dataset, item):
-        return '/'.join((location, dataset, 'wav', item+'.wav'))
-    
-    def load_folder(dataset_name):
-        items, labels = get_filelist(dataset_name) # NOTE: eagerly, since we need the size
-        urls = [wav_path(dataset_name, n) for n in items]
-
-        func = dask.delayed(feature_extractor)
-        lazy_values = [ func(url) for url in urls ]
-
-        # Construct a small Dask array for each of the loaded files
-        arrays = [dask.array.from_delayed(v, dtype=numpy.float, shape=feature_shape) for v in lazy_values]
-        # Stack all small Dask arrays into one
-        stack = dask.array.stack(arrays, axis=0)
-        return stack, labels
-    
+# returns Pandas.DataFrame
+def load_dataset(location):
     folders = [
         'polandnfc',
         'birdvox',
@@ -84,17 +57,45 @@ def get_dataset(location='https://storage.googleapis.com/dcase2018-bad',
         'warblr10k_test',
     ]
 
-    features = []
-    labels = []
-    for name in folders:
-        f, l = load_folder(name)
-        features.append(f)
-        labels.append(l)
+    def load_folder(folder):
+        u = '/'.join((location, folder, 'files.csv'))
+        #f = urllib.request.urlopen(u)
+        df = pandas.read_csv(u, dtype={'itemid': str})
+        assert df.itemid.dtype == 'object', df.itemid.dtype
+        df['folder'] = folder
+        return df
+    
+    df = pandas.concat([load_folder(f) for f in folders])
+    return df
+        
 
-    features = dask.array.concatenate(features)
-    labels = dask.array.concatenate(labels)
-    return features, labels
+location = 'https://storage.googleapis.com/dcase2018-bad'
+dataset = load_dataset(location)
 
-d, l = get_dataset()
-d.shape, l.shape
+print(dataset.shape)
+dataset.head(3)
+
+def extract_features(location, dataset,
+                feature_extractor=None, feature_shape=None):
+
+    if feature_extractor is None:
+        feature_extractor = extract_melspec_max
+        feature_shape = (64,)
+
+    def wav_path(folder, item):
+        return '/'.join((location, folder, 'wav', item+'.wav'))
+    
+    extract = dask.delayed(feature_extractor)
+    def setup_extraction(folder, item):
+        url = wav_path(folder, item)
+        value = extract(url)
+        arr = dask.array.from_delayed(value, dtype=numpy.float, shape=feature_shape)
+        return arr
+
+    arrays = [ setup_extraction(*t) for t in zip(dataset.folder, dataset.itemid) ]
+    features = dask.array.stack(arrays, axis=0)
+    return features
+    
+features = extract_features(location, dataset)
+features
 
