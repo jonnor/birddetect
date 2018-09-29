@@ -75,6 +75,16 @@ But maybe n_bases down to 10 could work. bubul used 16 maps,1 sparrow 32 maps
 Can one use feature-importance from RandomForest to drop not-needed features in dictionary?
 Depending on what we find, could be that one should run k-means only on some subset of frequency bins. Or split feature learning into multiple independent areas.
 Ref Learning Feature Representations with k-means, Coates/Ng.
+! Use memoization to compute features on-demand during tree evaluation. if feature(1) > 3.11 
+float feature(int idx) { if (cached[idx] != SENTINEL) cached[idx] = compute(idx); return cached[idx]; }
+Should bring large speedups when using convolutional features.
+Could even have multi-layer convolutional features, which pulls the underlying layer and so on.
+Ideally the selection of convolutional features would be on-demand when considering feature splits during tree construction.
+Then don't need to generate all up-front and then remove them afterwards.
+
+What operation does convolution of a specrogram correpond to in audio input?
+Is the non-linear  of a CNN needed/desired?
+Is the deep layers of a CNN needed, or can we just operate at multiple time/frequency scales?
 
 [Two Convolutional Neural Networks for Bird Detection in Audio Signals](http://www.ofai.at/~jan.schlueter/pubs/2017_eusipco.pdf).
 Describes a global CNN `bubul` (winner DCASE2017, reference DCASE2018)  and a local CNN `sparrow` with nearly equal performance

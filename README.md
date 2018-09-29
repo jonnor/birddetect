@@ -26,13 +26,13 @@ Run on hardware
 * Implement microphone input on ESP32
 * Implement sending of classification,features,audio
 
-DCASE2018 submission
+DCASE2018 evaluation
 
-* Fix predictions not outputting probability as floating-point
+* Fix predictions as floating-point probability. Leaderboard: http://lsis-argo.lsis.org:8005/login
 
 Improve performance in non-matched conditions
 
-* Implement OSKmeans feature learning. Ref Stowell LifeCLEF 2014.
+* Implement spherical K-means feature learning. Ref Stowell LifeCLEF 2014.
 * Try some data augmentation to make robust against variations and noise
 * Try a pre-emphasis filter
 * Try to add a highpass filter to reduce noise
