@@ -1,3 +1,14 @@
+import io
+import urllib.request
+
+import numpy
+import pandas
+import dask.array
+
+import scipy.io.wavfile
+import librosa
+
+
 def read_audio(path):
     f = urllib.request.urlopen(path)
     data = io.BytesIO(f.read())

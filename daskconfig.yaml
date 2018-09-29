@@ -1,0 +1,16 @@
+worker:
+  replicas: 4
+  env:
+    - name: EXTRA_CONDA_PACKAGES
+      value: numba xarray scipy matplotlib -c conda-forge
+    - name: EXTRA_PIP_PACKAGES
+      value: s3fs dask-ml librosa --upgrade
+
+# We want to keep the same packages on the worker and jupyter environments
+jupyter:
+  enabled: true
+  env:
+    - name: EXTRA_CONDA_PACKAGES
+      value: numba xarray scipy matplotlib -c conda-forge
+    - name: EXTRA_PIP_PACKAGES
+      value: s3fs dask-ml librosa --upgrade
