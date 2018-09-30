@@ -1,4 +1,10 @@
+scheduler:
+  image:
+    tag: "0.19.2"
+
 worker:
+  image:
+    tag: "0.19.2"
   replicas: 4
   env:
     - name: EXTRA_CONDA_PACKAGES
@@ -9,6 +15,8 @@ worker:
 # We want to keep the same packages on the worker and jupyter environments
 jupyter:
   enabled: true
+  image:
+    tag: "0.19.2"
   env:
     - name: EXTRA_CONDA_PACKAGES
       value: numba xarray scipy matplotlib -c conda-forge

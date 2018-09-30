@@ -57,7 +57,7 @@ def chunk_sequence(iterable, size):
 
 
 # Return a Dask.array, for distributed lazy computation of features
-def extract(urls, location=None,
+def extract(wavfiles, location=None,
             feature_extractor=None, feature_length=None, chunk_size=50):
 
     if feature_extractor is None:
@@ -67,7 +67,8 @@ def extract(urls, location=None,
     # Do processing in chunks, to avoid having too many tasks
     chunk_shape = (chunk_size, feature_length)
     def extract_chunk(urls):
-        r = numpy.ndarray(shape=chunk_shape)
+        r = numpy.zeros(shape=chunk_shape)
+        #r.fill(numpy.nan)
         for i, url in enumerate(urls):
             r[i,:] = feature_extractor(url)
         return r
@@ -78,8 +79,9 @@ def extract(urls, location=None,
         arr = dask.array.from_delayed(values, dtype=numpy.float, shape=chunk_shape)
         return arr
 
-    arrays = [ setup_extraction(c) for c in chunk_sequence(urls, chunk_size) ]
+    arrays = [ setup_extraction(c) for c in chunk_sequence(wavfiles, chunk_size) ]
     features = dask.array.concatenate(arrays, axis=0)
+
     return features
 
 
