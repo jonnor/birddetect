@@ -1,6 +1,7 @@
 # Bird audio detection using machine learning on microcontrollers
 
-Originally started for the DCASE2018 challenge: [Bird audio detection](http://dcase.community/challenge2018/task-bird-audio-detection)
+Originally started for the DCASE2018 challenge:
+[Bird audio detection](http://dcase.community/challenge2018/task-bird-audio-detection)
 
 ## Goals
 
@@ -25,10 +26,6 @@ Run on hardware
 * Run performance test on ESP32
 * Implement microphone input on ESP32
 * Implement sending of classification,features,audio
-
-DCASE2018 evaluation
-
-* Fix predictions as floating-point probability. Leaderboard: http://lsis-argo.lsis.org:8005/login
 
 Improve performance in non-matched conditions
 
