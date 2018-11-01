@@ -23,9 +23,10 @@ Run on hardware
 
 * Include RandomForestClassifier with float
 * Use embedded model in train/test in notebook
-* Run performance test on ESP32
-* Implement microphone input on ESP32
-* Implement sending of classification,features,audio
+* Run performance test on device
+* Implement microphone input on device
+* Implement sending of classification from device
+* Implement sending of features,audio for subsets of samples
 
 Improve performance in non-matched conditions
 
@@ -38,6 +39,11 @@ Improve performance in non-matched conditions
 * Try denoising the audio
 * Try an SNR estimator as feature
 
+MLCluster
+
+* Setup without LoadBalancer. Probably using NodePort `--set service.type=NodePort` 
+* Create script for easily getting right addresses for `NodePort`
+
 Tools
 
 * Cluster the datasets, look at (dis)similarities of compete vs train
@@ -45,15 +51,6 @@ Tools
 In addition to or instead of the spectrogram?
 * Make tools for getting misclassified results, visualize/playback
 * Visualize feature importance on top of features mean/meadian/std
-
-C library
-
-* Implement mean/stddev summarization (streamed)
-* Implement histogram statistics. skewness,kurtosis
-* Implement low/highpass filters
-* Implement preemphasis filter
-* Implement more features. RMS, zero-crossings, spectral centroid, spectral flatness
-* Implement MFCC calculation (DCT)
 
 Other interesting approaches
 
