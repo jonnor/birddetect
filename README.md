@@ -31,13 +31,9 @@ Run on hardware
 Improve performance in non-matched conditions
 
 * Implement spherical K-means feature learning. Ref Stowell LifeCLEF 2014.
-* Try some data augmentation to make robust against variations and noise
-* Try a pre-emphasis filter
-* Try to add a highpass filter to reduce noise
-* Try to add a lowpass filter to reduce noise
 * Try to log-scale the spectrograms
-* Try denoising the audio
-* Try an SNR estimator as feature
+* Try to cubic-scale the spectrograms
+
 
 MLCluster
 
@@ -51,12 +47,5 @@ Tools
 In addition to or instead of the spectrogram?
 * Make tools for getting misclassified results, visualize/playback
 * Visualize feature importance on top of features mean/meadian/std
-
-Other interesting approaches
-
-* Try HOG dictionary feature learning
-* Deep learning based, adapted for microcontrollers. CNN
-* OpenSMILE feature learning, segment probabilities. Mario
-
 
 
