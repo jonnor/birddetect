@@ -1,7 +1,7 @@
 
 import itertools
 import urllib.request
-
+import os.path
 
 import pandas
 import numpy
@@ -42,15 +42,31 @@ def load_dataset(location=None):
     df = pandas.concat([load_folder(f) for f in folders])
     return df
 
-# Return URL for a single wav file
+# Return wav URL for a single sample
 def wav_url(folder, item, location=None):
     if location is None:
         location = default_location
 
     return '/'.join((location, folder, 'wav', item+'.wav'))
 
-# Return URLs for each wav file in dataset 
+# Return wav URLs for each sample file in dataset 
 def wav_urls(dataset, location=None):
     urls = (wav_url(*t, location=location) for t in zip(dataset.folder, dataset.itemid))
+    return urls
+
+# Return URL for a single feature file
+def feature_url(folder, itemid, feature, location=None, ext=None):
+    if location is None:
+        location = default_location+'/features'
+    if ext is None:
+        ext = '.png'
+    return os.path.join(location, feature, folder, itemid+ext)
+
+# Return URLs for each sample in dataset
+def feature_urls(dataset, feature,
+                 location=None):
+    
+    items = zip(dataset.folder, dataset.itemid)
+    urls = [ feature_url(*t, feature, location) for t in items ]
     return urls
 
