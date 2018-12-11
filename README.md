@@ -6,9 +6,5 @@ Using data from the DCASE2018 challenge:
 
 ## Status
 
-* Basic RandomForest model exists
+[Baseline](./Baseline.ipynb) RandomForest model exists
 
-TODO
-
-* Feature learning
-* CNN model
