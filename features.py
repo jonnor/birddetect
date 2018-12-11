@@ -28,8 +28,6 @@ def minmaxscale(s):
 def melspec_maxp(data, sr):
     params = dict(n_mels=64, fmin=500, n_fft=2048, fmax=15000, htk=True)
     mel = librosa.feature.melspectrogram(y=data, sr=sr, **params)
-
-    # TODO: make normalization configurable
     mel = meansub(mel)
     mel = minmaxscale(mel)
 
@@ -44,7 +42,6 @@ def extract_melspec_max(path):
     except AssertionError:
         return numpy.full((64,), numpy.nan)
     return melspec_maxp(samples.astype(float), samplerate)
-
 
 
 import itertools
